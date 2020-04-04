@@ -40,7 +40,7 @@ public class XunitLogger : ILogger
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
-        _testOutputHelper.WriteLine($"Log{logLevel} > {_categoryName} [{eventId}] {formatter(state, exception)}");
+        _testOutputHelper.WriteLine($"Log{logLevel}: > {_categoryName} [{eventId}] \n {formatter(state, exception)}");
         if (exception != null)
             _testOutputHelper.WriteLine(exception.ToString());
     }
