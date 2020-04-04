@@ -10,6 +10,6 @@
 
 
 # To build and test
-To just build: `dotnet build`
-To run test: `dotnet test`
+To just build: `dotnet build` <br>
+To run test: `dotnet test` <br>
 To run test verbose + logging: `dotnet test -l:"console;verbosity=detailed"`
