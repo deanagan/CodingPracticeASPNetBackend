@@ -1,15 +1,16 @@
 using Xunit;
+using Xunit.Abstractions;
 using Moq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 
 using Api.Models;
 using Api.Services;
-using Api.Controllers;
 using Api.Interfaces;
 
 namespace Test.Controller
@@ -29,13 +30,14 @@ namespace Test.Controller
         };
         private readonly IProductService _productService;
         private readonly Mock<IProductRepository> _productRepositoryMock = new Mock<IProductRepository>();
-
-        public ProductServiceTest()
+        private readonly ILogger<ProductService> _logger;
+        public ProductServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _productRepositoryMock.Setup(
-                pr => pr.GetProducts()).Returns(_products);
-
-            _productService = new ProductService(_productRepositoryMock.Object);
+            _productRepositoryMock.Setup(pr => pr.GetProducts()).Returns(_products);
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
+            _logger = loggerFactory.CreateLogger<ProductService>();
+            _productService = new ProductService(_productRepositoryMock.Object, _logger);
         }
 
         [Fact]
