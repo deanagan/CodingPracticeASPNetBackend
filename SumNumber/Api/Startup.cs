@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 
 using Api.Services;
 using Api.Interfaces;
-using Api.Data;
 
 namespace Api
 {
