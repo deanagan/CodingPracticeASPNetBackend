@@ -22,7 +22,7 @@ namespace Test.Controller
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
             _logger = loggerFactory.CreateLogger<SumNumberController>();
         }
-        [Fact]
+        [Fact(Skip="Needs testing")]
         public void ProductShouldBeReturned_WhenItExists()
         {
            // Todo: Test Controller
