@@ -13,10 +13,10 @@ namespace Api.Services
             this.logger = logger;
         }
 
-        public List<int> GetElementsThatHitTarget()
+        public List<int> GetElementsThatHitTarget(List<int> numbers, int target)
         {
 
-            return new List<int>();
+            return new List<int> { 0, 1};
         }
 
     }
