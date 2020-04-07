@@ -28,17 +28,17 @@ namespace Api.Services
 
             return total;
         }
-        public int[] GetElementsThatHitTarget(int[] numbers, int target)
+        public int[] GetElementsThatHitTarget(int[] nums, int target)
         {
-            if (numbers.Length < 2)
+            if (nums.Length < 2)
             {
                 logger.LogError("Not enough numbers");
                 return null;
             }
 
-            if (numbers.Length == 2)
+            if (nums.Length == 2)
             {
-                if (numbers.Sum() == target)
+                if (nums.Sum() == target)
                 {
                     return new int[] { 0, 1 };
                 }
@@ -50,13 +50,18 @@ namespace Api.Services
             }
 
 
-            foreach(var num in numbers.Select((value, index) => (value, index)))
+            foreach(var num in nums.Select((value, index) => (value, index)))
             {
                 var diff = target - num.value;
                 logger.LogTrace($"{num.index} {num.value}");
-                if (numbers.Any(n => n == diff) && (diff != num.value))
+                if (nums.Any(n => n == diff))
                 {
-                    return new int[] { num.index, Array.FindIndex(numbers, ni => ni == diff) };
+                    var otherIndex = Array.FindIndex(nums, ni => ni == diff);
+                    if (num.index != otherIndex)
+                    {
+                        return new int[] {num.index, otherIndex};
+                    }
+
                 }
             }
 
