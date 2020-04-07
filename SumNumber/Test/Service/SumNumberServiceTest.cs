@@ -26,19 +26,20 @@ namespace Test.Controller
         }
 
         [Theory]
-        [InlineData(new object[] {new int[]{2, 7, 11, 15}, 9})]
-        public void ReturnCorrectPair_WhenFindingSuppliedTarget(int[] numbers, int target)
+        [InlineData(new object[] {new int[]{2, 7, 11, 15}, 9, new int[] {0,1}})]
+        [InlineData(new object[] {new int[]{3, 3}, 6, new int[] {0,1}})]
+        [InlineData(new object[] {new int[]{3, 2, 4}, 6, new int[] {1,2}})]
+        [InlineData(new object[] {new int[]{3, 2, 3}, 6, new int[] {0,2}})]
+        public void ReturnCorrectPair_WhenFindingSuppliedTarget(int[] numbers, int target, int[] expected)
         {
             // Arrange
             var sumNumberService = new SumNumberService(_logger);
-            var numberList = new List<int>();
-            numberList.AddRange(numbers);
 
             // Act
-            var result = sumNumberService.GetElementsThatHitTarget(numberList, target);
+            var result = sumNumberService.GetElementsThatHitTarget(numbers, target);
 
             // Assert
-            result.Should().ContainInOrder(0, 1);
+            result.Should().BeEquivalentTo(expected);
         }
 
 
