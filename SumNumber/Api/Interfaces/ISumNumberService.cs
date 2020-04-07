@@ -4,6 +4,6 @@ namespace Api.Interfaces
 {
     public interface ISumNumberService
     {
-        List<int> GetElementsThatHitTarget(List<int> numbers, int target);
+        int[] GetElementsThatHitTarget(int[] numbers, int target);
     }
 }
