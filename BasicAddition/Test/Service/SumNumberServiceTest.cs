@@ -26,22 +26,22 @@ namespace Test.Controller
         }
 
         [Theory]
-        [InlineData(new object[] {new int[]{2, 7, 11, 15}, 9, new int[] {0,1}})]
-        [InlineData(new object[] {new int[]{3, 3}, 6, new int[] {0,1}})]
-        [InlineData(new object[] {new int[]{3, 2, 4}, 6, new int[] {1,2}})]
-        [InlineData(new object[] {new int[]{3, 2, 3}, 6, new int[] {0,2}})]
-        [InlineData(new object[] {new int[]{0, 4, 3, 0}, 0, new int[] {0,3}})]
-        [InlineData(new object[] {new int[]{-3, 4, 3, 90}, 0, new int[] {0,2}})]
-        public void ReturnCorrectPair_WhenFindingSuppliedTarget(int[] numbers, int target, int[] expected)
+        [InlineData(new object[] {new int[]{2, 7, 11, 15}, 35})]
+        [InlineData(new object[] {new int[]{3, 3}, 6 })]
+        [InlineData(new object[] {new int[]{3, 2, 4}, 9})]
+        [InlineData(new object[] {new int[]{3, 2, 3}, 8})]
+        [InlineData(new object[] {new int[]{0, 4, 3, 0}, 7})]
+        [InlineData(new object[] {new int[]{-3, 4, 3, 90}, 94})]
+        public void CorrectSum_WhenAddingAllNumbers(int[] numbers, int expected)
         {
             // Arrange
             var sumNumberService = new SumNumberService(_logger);
 
             // Act
-            var result = sumNumberService.GetElementsThatHitTarget(numbers, target);
+            var result = sumNumberService.AddNumbers(numbers);
 
             // Assert
-            result.Should().BeEquivalentTo(expected);
+            result.Should().Be(expected);
         }
 
 

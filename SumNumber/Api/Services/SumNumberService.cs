@@ -50,19 +50,36 @@ namespace Api.Services
             }
 
             var complements = new Dictionary<int, int>();
-            foreach(var num in nums.Select((value, index) => (value, index)))
+            //foreach(var num in nums.Select((value, index) => (value, index)))
+            // mid to first search
+            var midIndex = nums.Length / 2;
+            for (var index = midIndex; index >= 0 ; index-- )
             {
-
-                var diff = target - num.value;
-                logger.LogTrace($"{num.index} {num.value} {diff}");
+                logger.LogTrace($"{index} {nums[index]}");
+                var diff = target - nums[index];
+                logger.LogTrace($"{diff}");
                 if (complements.ContainsKey(diff))
                 {
-                    return new int[] { num.index, complements[diff]};
+                    return new int[] { index, complements[diff]};
                 }
-                complements[num.value] = num.index;
+                complements[nums[index]] = index;
             }
 
-            logger.LogError("No addends found.");
+            logger.LogTrace("Searching mid to last");
+            // Not found, we do mid to last search
+            for (var index = midIndex + 1; index < nums.Length; index++ )
+            {
+                logger.LogTrace($"{index} {nums[index]}");
+                var diff = target - nums[index];
+                logger.LogTrace($"{diff}");
+                if (complements.ContainsKey(diff))
+                {
+                    return new int[] { index, complements[diff]};
+                }
+                complements[nums[index]] = index;
+            }
+
+            //logger.LogError("No addends found.");
             return null;
 
 
