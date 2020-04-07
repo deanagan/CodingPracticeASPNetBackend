@@ -49,20 +49,17 @@ namespace Api.Services
                 }
             }
 
-
+            var complements = new Dictionary<int, int>();
             foreach(var num in nums.Select((value, index) => (value, index)))
             {
-                var diff = target - num.value;
-                logger.LogTrace($"{num.index} {num.value}");
-                if (nums.Any(n => n == diff))
-                {
-                    var otherIndex = Array.FindIndex(nums, ni => ni == diff);
-                    if (num.index != otherIndex)
-                    {
-                        return new int[] {num.index, otherIndex};
-                    }
 
+                var diff = target - num.value;
+                logger.LogTrace($"{num.index} {num.value} {diff}");
+                if (complements.ContainsKey(diff))
+                {
+                    return new int[] { num.index, complements[diff]};
                 }
+                complements[num.value] = num.index;
             }
 
             logger.LogError("No addends found.");
