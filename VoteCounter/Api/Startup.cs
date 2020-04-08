@@ -30,7 +30,7 @@ namespace Api
         {
             services.AddControllers();
 
-            services.AddTransient<ISumNumberService, SumNumberService>();
+            services.AddTransient<IRateLimiter, TimedBaseRateLimiter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
