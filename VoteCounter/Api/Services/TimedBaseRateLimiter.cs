@@ -24,7 +24,7 @@ namespace Api.Services
         {
             if (!timer.IsTimerStarted(customerId))
             {
-                timer.StartTimer(customerId, (id) => customerIdRequestCounter[id] = 0);
+                timer.StartTimer(customerId, 1, (id) => customerIdRequestCounter[id] = 0);
             }
 
             // Registration

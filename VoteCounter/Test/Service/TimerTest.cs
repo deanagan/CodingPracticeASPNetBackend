@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 using Api.Services;
 using Api.Interfaces;
@@ -27,25 +28,24 @@ namespace Test.Controller
         }
 
         [Fact]
-        public void Timer_Started()
+        public void IdPassedToCallback_WhenTimerExpires()
         {
+            var expectedId = 23;
+            var returnedId = 0;
+            var autoResetEvent = new AutoResetEvent(false);
+
+            CallBack callback = (id) => {
+                returnedId = id;
+                autoResetEvent.Set();
+            };
 
             var timer = new RateTimer(_logger);
+            timer.StartTimer(expectedId, 500, callback);
 
-           // timer.StartTimer(1, (id) => _logger.LogTrace($"Callback done for {id}"));
-            // Arrange
-            // var sut = new TimedBaseRateLimiter(_logger, timer);
-            // var customerId = 1;
 
-            // // Act
-            // var result = true;
-            // foreach(var i in Enumerable.Range(1, 999))
-            // {
-            //     result = result & sut.RateLimit(customerId);
-            // }
+            autoResetEvent.WaitOne().Should().BeTrue();
+            returnedId.Should().Be(expectedId);
 
-            // // Assert
-            // result.Should().BeTrue();
         }
 
 
