@@ -6,12 +6,12 @@ using System;
 
 namespace Api.Services
 {
-    public class VoteFinder
+    public class VoteCounter
     {
         private ILogger logger;
         private Dictionary<string, int> votesCounter;
         private readonly bool doesFirstToReachWin;
-        public VoteFinder(ILogger logger, bool doesFirstToReachWin)
+        public VoteCounter(ILogger logger, bool doesFirstToReachWin)
         {
             this.logger = logger;
             this.doesFirstToReachWin = doesFirstToReachWin;

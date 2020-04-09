@@ -14,11 +14,11 @@ using Api.Interfaces;
 
 namespace Test.Controller
 {
-    public class VoteFinderTest
+    public class VoteCounterTest
     {
         private readonly ILogger<TimedBaseRateLimiter> _logger;
 
-        public VoteFinderTest(ITestOutputHelper testOutputHelper)
+        public VoteCounterTest(ITestOutputHelper testOutputHelper)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
@@ -42,7 +42,7 @@ namespace Test.Controller
         public void FindWinner_BasicExample1(string[] inputs, string expected, bool doesFirstToHitMax)
         {
             // Arrange
-            var sut = new VoteFinder(_logger, doesFirstToHitMax);
+            var sut = new VoteCounter(_logger, doesFirstToHitMax);
 
             // Act
             var result = sut.FindWinner(inputs.ToList());
@@ -55,7 +55,7 @@ namespace Test.Controller
         {
             var listOfVote = new List<Vote> { new Vote { Name="A", Count=5}, new Vote { Name="B", Count=3} };
 
-            var sut = new VoteFinder(_logger, true);
+            var sut = new VoteCounter(_logger, true);
 
             var result = sut.FindWinner(listOfVote);
 
