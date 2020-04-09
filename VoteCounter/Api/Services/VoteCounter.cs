@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Api.Interfaces;
+using Api.Models;
 using System;
 
 namespace Api.Services

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Api.Interfaces;
 using System;
 
-namespace Api.Services
+namespace Api.Models
 {
     public class Vote
     {

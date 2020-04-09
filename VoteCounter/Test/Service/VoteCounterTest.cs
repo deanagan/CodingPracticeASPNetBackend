@@ -11,6 +11,7 @@ using System.Linq;
 
 using Api.Services;
 using Api.Interfaces;
+using Api.Models;
 
 namespace Test.Controller
 {
