@@ -18,6 +18,7 @@ namespace Test.Controller
     {
         private readonly ILogger<TimedBaseRateLimiter> _logger;
         private ITimer timer;
+        private readonly int customerId = 1;
         public ProductServiceTest(ITestOutputHelper testOutputHelper)
         {
             var loggerFactory = new LoggerFactory();
@@ -26,26 +27,15 @@ namespace Test.Controller
             timer = Mock.Of<ITimer>();
         }
 
-        // [Theory]
-        // [InlineData(new object[] {new int[]{2, 7, 11, 15}, 35})]
-        // [InlineData(new object[] {new int[]{3, 3}, 6 })]
-        // [InlineData(new object[] {new int[]{3, 2, 4}, 9})]
-        // [InlineData(new object[] {new int[]{3, 2, 3}, 8})]
-        // [InlineData(new object[] {new int[]{0, 4, 3, 0}, 7})]
-        // [InlineData(new object[] {new int[]{-3, 4, 3, 90}, 94})]
         [Fact]
         public void RateLimiterReturnsTrue_WhenCheckingLessThanMax_TimerIsNotExpired()
         {
             // Arrange
-            var sut = new TimedBaseRateLimiter(_logger, timer);
-            var customerId = 1;
+            var sut = new TimedBaseRateLimiter(timer, maxRequest: 1000, _logger);
+            Mock.Get(timer).Setup(t => t.IsTimerStarted(customerId)).Returns(true);
 
             // Act
-            var result = true;
-            foreach(var i in Enumerable.Range(1, 999))
-            {
-                result = result & sut.RateLimit(customerId);
-            }
+            var result = Enumerable.Range(1, 999).All(_ => sut.RateLimit(customerId));
 
             // Assert
             result.Should().BeTrue();
@@ -55,49 +45,47 @@ namespace Test.Controller
         public void RateLimiterReturnsFalse_WhenOverMax_TimerStartedButNotExpired()
         {
             // Arrange
-            var sut = new TimedBaseRateLimiter(_logger, timer);
-            var customerId = 1;
-
+            var sut = new TimedBaseRateLimiter(timer, maxRequest: 1000, _logger);
             Mock.Get(timer).Setup(t => t.IsTimerStarted(customerId)).Returns(true);
 
             // Act
-            var result = true;
-            foreach(var i in Enumerable.Range(1, 1001))
-            {
-                result = result & sut.RateLimit(customerId);
-            }
+            var result = Enumerable.Range(1, 1001).All(_ => sut.RateLimit(customerId));
 
             // Assert
             result.Should().BeFalse();
         }
 
-        [Fact(Skip= "Skip for now")]
-        public void RateLimiterReturnsTrue_WhenTimerExpiredAfterMaxCalls()
+        [Fact]
+        public void RateLimiterReturnsTrue_WhenTimerExpiredBeforeMaxCallsExceeded()
         {
             // Arrange
-            var sut = new TimedBaseRateLimiter(_logger, timer);
-            var customerId = 1;
+            var maxRequest = 10;
+            var sut = new TimedBaseRateLimiter(timer, maxRequest, _logger);
+            CallBack callBack = null;
+            var numberOfCalls = 0;
 
-            Mock.Get(timer).Setup(t => t.IsTimerStarted(customerId)).Returns(true);
+            // Return false, then true on next invocation
+            Mock.Get(timer).Setup(t => t.IsTimerStarted(customerId)).Returns(() =>
+                {
+                    var result = numberOfCalls > 0;
+                    numberOfCalls++;
+                    return result;
+                });
+
+            Mock.Get(timer).Setup(t => t.StartTimer(customerId, It.IsAny<int>(), It.IsAny<CallBack>()))
+                                        .Callback<int, int, CallBack>((id, t, cb) => callBack = cb);
 
             // Act
-            var result = true;
-            foreach(var i in Enumerable.Range(1, 1001))
+            var result = Enumerable.Range(0, maxRequest + 5).All(n =>
             {
-                result = result & sut.RateLimit(customerId);
-                if (i == 1)
-                {
-                    Mock.Get(timer).Setup(t => t.IsTimerStarted(customerId)).Returns(false);
-                }
-
-                if (i == 995)
-                {
-                    // Call timer expiry callback
-                }
-            }
+                if (n == (maxRequest - 2)) { callBack(customerId); }
+                return sut.RateLimit(customerId);
+            });
 
             // Assert
-            result.Should().BeFalse();
+            result.Should().BeTrue();
+            Mock.Get(timer).Verify(
+                t => t.StartTimer(customerId, It.IsAny<int>(), It.IsAny<CallBack>()), Times.Exactly(2));
         }
 
 
