@@ -39,7 +39,7 @@ namespace Api.Services
             {
                 customerIdRequestCounter[customerId] = 0;
             }
-            logger.LogTrace($"Request # {customerIdRequestCounter[customerId]} for Customer Id {customerId}");
+
             // Check
             return (customerIdRequestCounter[customerId] < maxRequest);
         }
