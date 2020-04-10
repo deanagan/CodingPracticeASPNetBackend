@@ -78,7 +78,7 @@ namespace Test.Controller
             // Act
             var result = Enumerable.Range(0, maxRequest + 5).All(n =>
             {
-                if (n == (maxRequest - 2)) { callBack(customerId); }
+                if (n == (maxRequest - 2)) { callBack(customerId); numberOfCalls = 0; }
                 return sut.RateLimit(customerId);
             });
 
