@@ -13,7 +13,6 @@ namespace Api.Services
         private ILogger logger;
 
         private Dictionary<int, Timer> customerIdTimers;
-        private readonly int TIMER_MAX = 1;
 
         public RateTimer(ILogger logger)
         {
@@ -21,16 +20,10 @@ namespace Api.Services
 
             customerIdTimers = new Dictionary<int, Timer>();
         }
-        // private static void OnTimedEvent(Object source, ElapsedEventArgs e)
-        // {
-        //     var id = source;
-
-        // }
 
         public void StartTimer(int id, int timeInMilliSeconds, CallBack TimerExpiredCallback)
         {
             customerIdTimers[id] = new Timer(timeInMilliSeconds);
-            // // Hook up the Elapsed event for the timer.
             customerIdTimers[id].Elapsed += (sender, e) => TimerExpiredCallback(id);
             customerIdTimers[id].AutoReset = false;
             customerIdTimers[id].Enabled = true;
