@@ -11,12 +11,14 @@ namespace Api.Services
         private ILogger logger;
         private ITimer timer;
         private Dictionary<int, int> customerIdRequestCounter;
-        private readonly int MAX_REQUESTS = 1000;
+        private readonly int maxRequest;
 
-        public TimedBaseRateLimiter(ILogger logger, ITimer timer)
+        public TimedBaseRateLimiter(ITimer timer, int maxRequest, ILogger logger)
         {
-            this.logger = logger;
             this.timer = timer;
+            this.maxRequest = maxRequest;
+            this.logger = logger;
+
             customerIdRequestCounter = new Dictionary<int, int>();
         }
 
@@ -24,6 +26,7 @@ namespace Api.Services
         {
             if (!timer.IsTimerStarted(customerId))
             {
+                logger.LogTrace($"Timer started for Customer Id {customerId}");
                 timer.StartTimer(customerId, 1, (id) => customerIdRequestCounter[id] = 0);
             }
 
@@ -36,9 +39,9 @@ namespace Api.Services
             {
                 customerIdRequestCounter[customerId] = 0;
             }
-
+            logger.LogTrace($"Request # {customerIdRequestCounter[customerId]} for Customer Id {customerId}");
             // Check
-            return (customerIdRequestCounter[customerId] < MAX_REQUESTS);
+            return (customerIdRequestCounter[customerId] < maxRequest);
         }
 
     }
