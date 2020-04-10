@@ -48,6 +48,26 @@ namespace Test.Controller
 
         }
 
+        [Fact]
+        public void TimerNotStarted_WhenTimerExpires()
+        {
+            var expectedId = 23;
+            var returnedId = 0;
+            var autoResetEvent = new AutoResetEvent(false);
+
+            CallBack callback = (id) => {
+                returnedId = id;
+                autoResetEvent.Set();
+            };
+
+            var timer = new RateTimer(_logger);
+            timer.StartTimer(expectedId, 500, callback);
+
+
+            autoResetEvent.WaitOne().Should().BeTrue();
+            timer.IsTimerStarted(expectedId).Should().BeFalse();
+
+        }
 
     }
 }
