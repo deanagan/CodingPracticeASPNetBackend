@@ -27,23 +27,13 @@ namespace Test.Controller
         }
 
         [Theory]
-        [InlineData(new object[] {new string[]{"A", "B", "A", "C", "D", "B", "A"}, "A", true})]
-        [InlineData(new object[] {new string[]{"A", "A", "B", "B"}, "A", true})]
-        [InlineData(new object[] {new string[]{"A", "B", "B", "A"}, "B", true})]
-
-        [InlineData(new object[] {new string[]{"A", "B", "A", "C", "D", "B", "A"}, "A", false})]
-        [InlineData(new object[] {new string[]{"A", "A", "B", "B"}, "B", false})]
-        [InlineData(new object[] {new string[]{"A", "B", "B", "A"}, "A", false})]
-
-        // [InlineData(new object[] {new int[]{3, 3}, 6 })]
-        // [InlineData(new object[] {new int[]{3, 2, 4}, 9})]
-        // [InlineData(new object[] {new int[]{3, 2, 3}, 8})]
-        // [InlineData(new object[] {new int[]{0, 4, 3, 0}, 7})]
-        // [InlineData(new object[] {new int[]{-3, 4, 3, 90}, 94})]
-        public void FindWinner_BasicExample1(string[] inputs, string expected, bool doesFirstToHitMax)
+        [InlineData(new object[] {new string[]{"A", "B", "A", "C", "D", "B", "A"}, "A"})]
+        [InlineData(new object[] {new string[]{"A", "A", "B", "B"}, "A"})]
+        [InlineData(new object[] {new string[]{"A", "B", "B", "A"}, "B"})]
+        public void FindWinner_BasicExample1(string[] inputs, string expected)
         {
             // Arrange
-            var sut = new VoteCounter(_logger, doesFirstToHitMax);
+            var sut = new VoteCounter(_logger);
 
             // Act
             var result = sut.FindWinner(inputs.ToList());
@@ -56,15 +46,11 @@ namespace Test.Controller
         {
             var listOfVote = new List<Vote> { new Vote { Name="A", Count=5}, new Vote { Name="B", Count=3} };
 
-            var sut = new VoteCounter(_logger, true);
+            var sut = new VoteCounter(_logger);
 
             var result = sut.FindWinner(listOfVote);
 
             result.Should().Be("A");
         }
-
-
-
-
     }
 }
