@@ -11,22 +11,11 @@ namespace Api.Services
     {
         private ILogger logger;
         private Dictionary<string, int> votesCounter;
-        private readonly bool doesFirstToReachWin;
-        public VoteCounter(ILogger logger, bool doesFirstToReachWin)
+
+        public VoteCounter(ILogger logger)
         {
             this.logger = logger;
-            this.doesFirstToReachWin = doesFirstToReachWin;
             votesCounter = new Dictionary<string, int>();
-        }
-
-        private bool DoesUpdateToNewWinner(int currentVoteCount, int maxCount)
-        {
-            if (doesFirstToReachWin)
-            {
-                return currentVoteCount > maxCount;
-            }
-
-            return currentVoteCount >= maxCount;
         }
 
         public string FindWinner(List<Vote> votes)
@@ -45,7 +34,7 @@ namespace Api.Services
                     votesCounter[vote.Name] = vote.Count;
                 }
 
-                if (DoesUpdateToNewWinner(votesCounter[vote.Name], maxCount))
+                if (votesCounter[vote.Name] > maxCount)
                 {
                     winner = vote.Name;
                     maxCount = votesCounter[vote.Name];
