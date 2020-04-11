@@ -30,6 +30,12 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [HttpPost("[action]")]
+        public IActionResult AddVote(string name)
+        {
+            return Ok();
+        }
+
 
     }
 }
