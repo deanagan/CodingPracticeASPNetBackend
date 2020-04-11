@@ -12,19 +12,19 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SumNumberController : ControllerBase
+    public class VoteCounterController : ControllerBase
     {
-        //private readonly ISumNumberService productService;
+
         private readonly ILogger _logger;
 
-        public SumNumberController(ILogger<SumNumberController> logger)
+        public VoteCounterController(ILogger<VoteCounterController> logger)
         {
 
             this._logger = logger;
         }
 
         [HttpGet("[action]")]
-        public IActionResult SumNumber(int id)
+        public IActionResult TopVoters()
         {
 
             return Ok();
