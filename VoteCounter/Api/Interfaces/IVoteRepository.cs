@@ -7,6 +7,9 @@ namespace Api.Interfaces
 
     public interface IVoteRepository
     {
-        IList<Vote> GetVotes();
+        void AddVoteFor(string name, int votes);
+        void AddVoteFor(string name);
+
+        void Reset();
     }
 }
