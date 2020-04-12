@@ -16,26 +16,34 @@ namespace Api.Controllers
     {
 
         private readonly ILogger _logger;
+        private IVoteService _voteService;
 
-        public VoteCounterController(ILogger<VoteCounterController> logger)
+        public VoteCounterController(IVoteService voteService, ILogger<VoteCounterController> logger)
         {
-
+            this._voteService = voteService;
             this._logger = logger;
         }
 
         [HttpGet("[action]")]
-        public IActionResult TopVoters()
+        public IActionResult GetWinner()
         {
-
+            // Return list of vote instances with top vote count
             return Ok();
         }
 
         [HttpPost("[action]")]
-        public IActionResult AddVote(string name)
+        public IActionResult AddVote(int id)
         {
+            _voteService.AddVoteFor(id);
             return Ok();
         }
 
+        [HttpPut("[action]")]
+        public IActionResult AddVote(int id, int votesToAdd)
+        {
+            _voteService.AddVoteFor(id, votesToAdd);
+            return Ok();
+        }
 
     }
 }
