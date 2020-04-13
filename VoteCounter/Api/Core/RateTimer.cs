@@ -10,7 +10,7 @@ namespace Api.Services
 {
     public class RateTimer : ITimer
     {
-        private ILogger logger;
+        private ILogger<RateTimer> logger;
 
         private Dictionary<int, Timer> customerIdTimers;
 

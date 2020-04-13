@@ -9,10 +9,10 @@ namespace Api.Services
 {
     public class VoteCounter
     {
-        private ILogger logger;
+        private ILogger<VoteCounter> logger;
         private Dictionary<string, int> votesCounter;
 
-        public VoteCounter(ILogger logger)
+        public VoteCounter(ILogger<VoteCounter> logger)
         {
             this.logger = logger;
             votesCounter = new Dictionary<string, int>();

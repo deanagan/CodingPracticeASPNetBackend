@@ -1,22 +1,25 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using Api.Interfaces;
 using System;
+using System.Collections.Generic;
+
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+
+using Api.Interfaces;
+
 
 namespace Api.Services
 {
     public class TimedBaseRateLimiter : IRateLimiter
     {
-        private ILogger logger;
+        private ILogger<TimedBaseRateLimiter> logger;
         private ITimer timer;
         private Dictionary<int, int> customerIdRequestCounter;
         private readonly int maxRequest;
 
-        public TimedBaseRateLimiter(ITimer timer, int maxRequest, ILogger logger)
+        public TimedBaseRateLimiter(ITimer timer, IConfiguration config, ILogger<TimedBaseRateLimiter> logger)
         {
             this.timer = timer;
-            this.maxRequest = maxRequest;
+            this.maxRequest = Convert.ToInt32(config["MaxRequests"]);
             this.logger = logger;
 
             customerIdRequestCounter = new Dictionary<int, int>();
