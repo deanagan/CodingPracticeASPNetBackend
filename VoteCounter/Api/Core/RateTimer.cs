@@ -14,7 +14,7 @@ namespace Api.Services
 
         private Dictionary<int, Timer> customerIdTimers;
 
-        public RateTimer(ILogger logger)
+        public RateTimer(ILogger<RateTimer> logger)
         {
             this.logger = logger;
 
