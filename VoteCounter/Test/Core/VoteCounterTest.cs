@@ -17,13 +17,13 @@ namespace Test.Controller
 {
     public class VoteCounterTest
     {
-        private readonly ILogger<TimedBaseRateLimiter> _logger;
+        private readonly ILogger<VoteCounter> _logger;
 
         public VoteCounterTest(ITestOutputHelper testOutputHelper)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
-            _logger = loggerFactory.CreateLogger<TimedBaseRateLimiter>();
+            _logger = loggerFactory.CreateLogger<VoteCounter>();
         }
 
         [Theory]

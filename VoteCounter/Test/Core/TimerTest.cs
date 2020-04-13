@@ -17,13 +17,13 @@ namespace Test.Controller
 {
     public class TimerTest
     {
-        private readonly ILogger<TimedBaseRateLimiter> _logger;
+        private readonly ILogger<RateTimer> _logger;
         private ITimer timer;
         public TimerTest(ITestOutputHelper testOutputHelper)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
-            _logger = loggerFactory.CreateLogger<TimedBaseRateLimiter>();
+            _logger = loggerFactory.CreateLogger<RateTimer>();
             timer = Mock.Of<ITimer>();
         }
 
