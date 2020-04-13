@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using Api.Services;
 using Api.Interfaces;
+using Api.Data;
 
 namespace Api
 {
@@ -31,6 +32,9 @@ namespace Api
             services.AddControllers();
 
             services.AddTransient<IRateLimiter, TimedBaseRateLimiter>();
+            services.AddTransient<ITimer, RateTimer>();
+            services.AddTransient<IVoteService, VoteService>();
+            services.AddTransient<IVoteRepository, VoteRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
