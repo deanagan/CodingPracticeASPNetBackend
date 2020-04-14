@@ -10,6 +10,11 @@ namespace Api.Services
             _voteRepository = voteRepository;
         }
 
+        public string GetWinner()
+        {
+            return string.Empty;
+        }
+
         public void AddVoteFor(int id, int votes)
         {
             string name = "Donald";
