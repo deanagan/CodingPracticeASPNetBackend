@@ -69,5 +69,18 @@ namespace Test.Controller
 
         }
 
+        [Fact]
+        public void IsTimerStartedReturnsFalse_WhenIsTimerStartedInvokedForNewId()
+        {
+            // Arrange
+            var timer = new RateTimer(_logger);
+
+            // Act
+            var result = timer.IsTimerStarted(1);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
     }
 }
