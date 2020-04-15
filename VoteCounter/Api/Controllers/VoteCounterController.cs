@@ -6,10 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Options;
+
 using Api.Interfaces;
+using Api.Filters;
 
 namespace Api.Controllers
 {
+    public class VoteCounterControllerSettings
+    {
+        public int MaxRequests { get; set; }
+
+        // ...
+    }
+
     [ApiController]
     [Route("api/[controller]")]
     public class VoteCounterController : ControllerBase
@@ -17,24 +28,29 @@ namespace Api.Controllers
 
         private readonly ILogger _logger;
         private IVoteService _voteService;
-
-        public VoteCounterController(IVoteService voteService, ILogger<VoteCounterController> logger)
+        private readonly VoteCounterControllerSettings _settings;
+        public IRateLimiter RateLimiter { get; }
+        public VoteCounterController(IOptions<VoteCounterControllerSettings> options, IRateLimiter rateLimiter, IVoteService voteService, ILogger<VoteCounterController> logger)
         {
             this._voteService = voteService;
             this._logger = logger;
+            this.RateLimiter = rateLimiter;
+            this._settings = options.Value;
         }
 
         [HttpGet("[action]")]
         public IActionResult GetWinner()
         {
             // Return list of vote instances with top vote count
+
             return Ok();
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("[action]/{id}")]
+        [TimeBasedAPILimiterFilter]
         public IActionResult AddVote(int id)
         {
-            _voteService.AddVoteFor(id);
+            //_voteService.AddVoteFor(id);
             return Ok();
         }
 
