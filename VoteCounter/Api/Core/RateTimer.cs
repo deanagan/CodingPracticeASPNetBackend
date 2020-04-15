@@ -32,7 +32,7 @@ namespace Api.Services
 
         public bool IsTimerStarted(int id)
         {
-            return customerIdTimers[id].Enabled;
+            return customerIdTimers.ContainsKey(id) && customerIdTimers[id].Enabled;
         }
     }
 }
