@@ -18,7 +18,7 @@ namespace Api.Controllers
     {
         public int MaxRequests { get; set; }
 
-        // ...
+        public int MaxTimeInMilliSeconds { get; set; }
     }
 
     [ApiController]

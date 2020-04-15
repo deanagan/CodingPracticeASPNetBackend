@@ -1,50 +1,50 @@
-using System;
 using System.Collections.Generic;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 using Api.Interfaces;
-
+using Api.Controllers;
 
 namespace Api.Services
 {
     public class TimedBaseRateLimiter : IRateLimiter
     {
-        private ILogger<TimedBaseRateLimiter> logger;
-        private ITimer timer;
-        private Dictionary<int, int> customerIdRequestCounter;
-        private readonly int maxRequest;
+        private ILogger<TimedBaseRateLimiter> _logger;
+        private ITimer _timer;
+        private Dictionary<int, int> _customerIdRequestCounter;
+        private readonly int _maxRequest;
+        private readonly int _maxTimeInMilliSeconds;
 
-        public TimedBaseRateLimiter(ITimer timer, IConfiguration config, ILogger<TimedBaseRateLimiter> logger)
+        public TimedBaseRateLimiter(ITimer timer, IOptions<VoteCounterControllerSettings> options, ILogger<TimedBaseRateLimiter> logger)
         {
-            this.timer = timer;
-            this.maxRequest = Convert.ToInt32(config["MaxRequests"]);
-            this.logger = logger;
-
-            customerIdRequestCounter = new Dictionary<int, int>();
+            this._timer = timer;
+            this._maxRequest = options.Value.MaxRequests;
+            this._maxTimeInMilliSeconds = options.Value.MaxTimeInMilliSeconds;
+            this._logger = logger;
+            this._customerIdRequestCounter = new Dictionary<int, int>();
         }
 
         public bool RateLimit(int customerId)
         {
-            if (!timer.IsTimerStarted(customerId))
+            if (!_timer.IsTimerStarted(customerId))
             {
-                logger.LogTrace($"Timer started for Customer Id {customerId}");
-                timer.StartTimer(customerId, 1, (id) => customerIdRequestCounter[id] = 0);
+                _logger.LogTrace($"Timer started for Customer Id {customerId}");
+                _timer.StartTimer(customerId, _maxTimeInMilliSeconds, (id) => _customerIdRequestCounter[id] = 0);
             }
 
             // Registration
-            if (customerIdRequestCounter.ContainsKey(customerId))
+            if (_customerIdRequestCounter.ContainsKey(customerId))
             {
-                customerIdRequestCounter[customerId]++;
+                _customerIdRequestCounter[customerId]++;
             }
             else
             {
-                customerIdRequestCounter[customerId] = 0;
+                _customerIdRequestCounter[customerId] = 0;
             }
 
             // Check
-            return (customerIdRequestCounter[customerId] < maxRequest);
+            return (_customerIdRequestCounter[customerId] <= _maxRequest);
         }
 
     }
