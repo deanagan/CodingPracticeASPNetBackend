@@ -31,7 +31,7 @@ namespace Test.Controller
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
             _logger = loggerFactory.CreateLogger<TimedBaseRateLimiter>();
             _timer = Mock.Of<ITimer>();
-            _options = Mock.Of<IOptions<VoteCounterControllerSettings>>(options => options.Value.MaxRequests == 1000);
+            _options = Mock.Of<IOptions<VoteCounterControllerSettings>>(options => options.Value.MaxRequests == 10);
             _rateLimiter = new TimedBaseRateLimiter(_timer, _options, _logger);
         }
 
@@ -42,7 +42,7 @@ namespace Test.Controller
             Mock.Get(_timer).Setup(t => t.IsTimerStarted(customerId)).Returns(true);
 
             // Act
-            var result = Enumerable.Range(1, 999).All(_ => _rateLimiter.RateLimit(customerId));
+            var result = Enumerable.Range(1, 9).All(_ => _rateLimiter.RateLimit(customerId));
 
             // Assert
             result.Should().BeTrue();
@@ -55,7 +55,7 @@ namespace Test.Controller
             Mock.Get(_timer).Setup(t => t.IsTimerStarted(customerId)).Returns(true);
 
             // Act
-            var result = Enumerable.Range(1, 1001).All(_ => _rateLimiter.RateLimit(customerId));
+            var result = Enumerable.Range(1, 11).All(_ => _rateLimiter.RateLimit(customerId));
 
             // Assert
             result.Should().BeFalse();
