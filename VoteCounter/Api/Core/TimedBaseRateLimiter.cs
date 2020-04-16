@@ -44,7 +44,7 @@ namespace Api.Services
             }
 
             // Check
-            return (_customerIdRequestCounter[customerId] <= _maxRequest);
+            return (_customerIdRequestCounter[customerId] < _maxRequest);
         }
 
     }
