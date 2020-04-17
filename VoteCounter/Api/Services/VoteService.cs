@@ -26,5 +26,10 @@ namespace Api.Services
             string name ="Donald";
             _voteRepository.AddVoteFor(name);
         }
+
+        public int TotalVotesProcessed()
+        {
+            return _voteRepository.TotalVotesAdded();
+        }
     }
 }

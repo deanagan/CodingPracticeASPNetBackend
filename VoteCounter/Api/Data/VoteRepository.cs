@@ -32,5 +32,10 @@ namespace Api.Data
                 candidate.Count += votes;
             }
         }
+
+        public int TotalVotesProcessed()
+        {
+            return VotesCounted.Count();
+        }
     }
 }
