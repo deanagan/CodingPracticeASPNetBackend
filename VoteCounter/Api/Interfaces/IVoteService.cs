@@ -5,5 +5,7 @@ namespace Api.Interfaces
         string GetWinner();
         void AddVoteFor(int id, int votes);
         void AddVoteFor(int id);
+
+        int TotalVotesProcessed();
     }
 }

@@ -11,5 +11,7 @@ namespace Api.Interfaces
         void AddVoteFor(string name);
 
         void Reset();
+
+        int TotalVotesProcessed();
     }
 }
