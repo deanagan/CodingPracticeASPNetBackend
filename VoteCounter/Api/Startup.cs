@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 
 using Api.Services;
 using Api.Interfaces;
@@ -31,11 +32,14 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMemoryCache();
 
             services.AddSingleton<IRateLimiter, TimedBaseRateLimiter>();
+            services.AddSingleton<IVoteRepository, VoteRepository>();
+
             services.AddTransient<ITimer, RateTimer>();
             services.AddTransient<IVoteService, VoteService>();
-            services.AddTransient<IVoteRepository, VoteRepository>();
+            services.AddTransient<IVoteCounter, VoteCounter>();
 
             services.Configure<VoteCounterControllerSettings>(Configuration);
         }
