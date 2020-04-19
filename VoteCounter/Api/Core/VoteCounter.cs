@@ -7,7 +7,7 @@ using System;
 
 namespace Api.Services
 {
-    public class VoteCounter
+    public class VoteCounter : IVoteCounter
     {
         private ILogger<VoteCounter> logger;
         private Dictionary<string, int> votesCounter;
