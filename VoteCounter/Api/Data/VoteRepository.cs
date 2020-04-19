@@ -22,7 +22,8 @@ namespace Api.Data
 
         public void AddVoteFor(string name, int votes)
         {
-            var candidate = VotesCounted.First(vote => vote.Name == name);
+
+            var candidate = VotesCounted.Find(vote => vote.Name == name);
             if (candidate == null)
             {
                 VotesCounted.Add(new Vote { Name = name, Count = votes});
