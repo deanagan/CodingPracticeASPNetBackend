@@ -8,7 +8,7 @@ namespace Api.Data
 {
     public class VoteRepository : IVoteRepository
     {
-        private readonly List<Vote> VotesCounted = new List<Vote>();
+        public List<Vote> VotesCounted { get; } = new List<Vote>();
 
         public void Reset()
         {
