@@ -15,21 +15,14 @@ namespace Api.Services
             return string.Empty;
         }
 
-        public void AddVoteFor(int id, int votes)
+        public void AddVoteFor(string name)
         {
-            string name = "Donald";
-            _voteRepository.AddVoteFor(name, votes);
-        }
-
-        public void AddVoteFor(int id)
-        {
-            string name ="Donald";
             _voteRepository.AddVoteFor(name);
         }
 
         public int TotalVotesProcessed()
         {
-            return _voteRepository.TotalVotesAdded();
+            return _voteRepository.TotalVotesProcessed();
         }
     }
 }
