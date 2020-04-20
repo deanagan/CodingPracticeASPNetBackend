@@ -12,27 +12,27 @@ namespace Api.Services
     {
         private ILogger<RateTimer> logger;
 
-        private Dictionary<int, Timer> customerIdTimers;
+        private Dictionary<string, Timer> customerIdTimers;
 
         public RateTimer(ILogger<RateTimer> logger)
         {
             this.logger = logger;
 
-            customerIdTimers = new Dictionary<int, Timer>();
+            customerIdTimers = new Dictionary<string, Timer>();
         }
 
-        public void StartTimer(int id, int timeInMilliSeconds, CallBack TimerExpiredCallback)
+        public void StartTimer(string key, int timeInMilliSeconds, CallBack TimerExpiredCallback)
         {
-            customerIdTimers[id] = new Timer(timeInMilliSeconds);
-            customerIdTimers[id].Elapsed += (sender, e) => TimerExpiredCallback(id);
-            customerIdTimers[id].AutoReset = false;
-            customerIdTimers[id].Enabled = true;
-            customerIdTimers[id].Start();
+            customerIdTimers[key] = new Timer(timeInMilliSeconds);
+            customerIdTimers[key].Elapsed += (sender, e) => TimerExpiredCallback(key);
+            customerIdTimers[key].AutoReset = false;
+            customerIdTimers[key].Enabled = true;
+            customerIdTimers[key].Start();
         }
 
-        public bool IsTimerStarted(int id)
+        public bool IsTimerStarted(string key)
         {
-            return customerIdTimers.ContainsKey(id) && customerIdTimers[id].Enabled;
+            return customerIdTimers.ContainsKey(key) && customerIdTimers[key].Enabled;
         }
     }
 }

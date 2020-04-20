@@ -25,48 +25,49 @@ namespace Test.Controller
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
             _logger = loggerFactory.CreateLogger<RateTimer>();
             timer = Mock.Of<ITimer>();
+
         }
 
         [Fact]
-        public void IdPassedToCallback_WhenTimerExpires()
+        public void KeyPassedToCallback_WhenTimerExpires()
         {
-            var expectedId = 23;
-            var returnedId = 0;
+            // Arrange
+            var expectedKey = "Foo";
+            var returnedKey = string.Empty;
             var autoResetEvent = new AutoResetEvent(false);
 
-            CallBack callback = (id) => {
-                returnedId = id;
+            CallBack callback = (key) => {
+                returnedKey = key;
                 autoResetEvent.Set();
             };
-
             var timer = new RateTimer(_logger);
-            timer.StartTimer(expectedId, 500, callback);
 
+            // Act
+            timer.StartTimer(expectedKey, 500, callback);
 
+            // Assert
             autoResetEvent.WaitOne().Should().BeTrue();
-            returnedId.Should().Be(expectedId);
-
+            returnedKey.Should().Be(expectedKey);
         }
 
         [Fact]
         public void TimerNotStarted_WhenTimerExpires()
         {
-            var expectedId = 23;
-            var returnedId = 0;
+            var expectedKey = "Foo";
+            var returnedKey = string.Empty;
             var autoResetEvent = new AutoResetEvent(false);
 
-            CallBack callback = (id) => {
-                returnedId = id;
+            CallBack callback = (key) => {
+                returnedKey = key;
                 autoResetEvent.Set();
             };
 
             var timer = new RateTimer(_logger);
-            timer.StartTimer(expectedId, 500, callback);
+            timer.StartTimer(expectedKey, 500, callback);
 
 
             autoResetEvent.WaitOne().Should().BeTrue();
-            timer.IsTimerStarted(expectedId).Should().BeFalse();
-
+            timer.IsTimerStarted(expectedKey).Should().BeFalse();
         }
 
         [Fact]
@@ -76,7 +77,7 @@ namespace Test.Controller
             var timer = new RateTimer(_logger);
 
             // Act
-            var result = timer.IsTimerStarted(1);
+            var result = timer.IsTimerStarted("foo");
 
             // Assert
             result.Should().BeFalse();

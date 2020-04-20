@@ -17,8 +17,8 @@ namespace Api.Filters
         {
             var voteCounterController = ((VoteCounterController)context.Controller);
 
-            var id = Convert.ToInt32(context.ActionArguments["id"]);
-            if (!voteCounterController.RateLimiter.RateLimit(id))
+            var key = context.ActionArguments["candidate"].ToString();
+            if (!voteCounterController.RateLimiter.RateLimit(key))
             {
                 context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                 context.Result = new ContentResult { Content = "Too Many Requests" };

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Http;
 
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,34 +32,40 @@ namespace Api.Controllers
         private IVoteService _voteService;
         private readonly VoteCounterControllerSettings _settings;
         public IRateLimiter RateLimiter { get; }
-        public VoteCounterController(IOptions<VoteCounterControllerSettings> options, IRateLimiter rateLimiter, IVoteService voteService, ILogger<VoteCounterController> logger)
+        private IMemoryCache _memoryCache;
+        public VoteCounterController(IOptions<VoteCounterControllerSettings> options,
+                                     IRateLimiter rateLimiter,
+                                     IVoteService voteService,
+                                     IMemoryCache memoryCache,
+                                     ILogger<VoteCounterController> logger)
         {
             this._voteService = voteService;
             this._logger = logger;
             this.RateLimiter = rateLimiter;
             this._settings = options.Value;
+            this._memoryCache = memoryCache;
         }
 
         [HttpGet("[action]")]
         public IActionResult GetWinner()
         {
-            // Return list of vote instances with top vote count
+            var currentWinner = string.Empty;
+            var totalVotesProcessed = _voteService.TotalVotesProcessed();
+            if (!_memoryCache.TryGetValue(totalVotesProcessed, out currentWinner))
+            {
+                currentWinner = _voteService.GetWinner();
+                _memoryCache.Set(totalVotesProcessed, currentWinner);
+            }
 
-            return Ok();
+            return Ok(currentWinner);
+
         }
 
-        [HttpPost("[action]/{id}")]
+        [HttpPost("[action]/{candidate}")]
         [TimeBasedAPILimiterFilter]
-        public IActionResult AddVote(int id)
+        public IActionResult AddVote(string candidate)
         {
-            //_voteService.AddVoteFor(id);
-            return Ok();
-        }
-
-        [HttpPut("[action]")]
-        public IActionResult AddVote(int id, int votesToAdd)
-        {
-            _voteService.AddVoteFor(id, votesToAdd);
+            _voteService.AddVoteFor(candidate);
             return Ok();
         }
 

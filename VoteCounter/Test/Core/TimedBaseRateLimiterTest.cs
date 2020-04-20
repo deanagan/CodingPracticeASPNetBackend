@@ -22,7 +22,7 @@ namespace Test.Controller
     {
         private readonly ILogger<TimedBaseRateLimiter> _logger;
         private ITimer _timer;
-        private readonly int CUSTOMER_ID = 1;
+        private readonly string CANDIDATE = "Foo";
         private readonly int MAX_REQUESTS = 10;
         private IOptions<VoteCounterControllerSettings> _options;
         private TimedBaseRateLimiter _rateLimiter;
@@ -40,7 +40,7 @@ namespace Test.Controller
         {
             var timerStarted = false;
 
-            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CUSTOMER_ID)).Returns(() =>
+            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CANDIDATE)).Returns(() =>
                 {
                     if (timerStarted == false)
                     {
@@ -55,10 +55,10 @@ namespace Test.Controller
         public void RateLimiterReturnsTrue_WhenCheckingLessThanMax_TimerIsNotExpired()
         {
             // Arrange
-            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CUSTOMER_ID)).Returns(true);
+            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CANDIDATE)).Returns(true);
 
             // Act
-            var result = Enumerable.Range(1, 9).All(_ => _rateLimiter.RateLimit(CUSTOMER_ID));
+            var result = Enumerable.Range(1, 9).All(_ => _rateLimiter.RateLimit(CANDIDATE));
 
             // Assert
             result.Should().BeTrue();
@@ -68,10 +68,10 @@ namespace Test.Controller
         public void RateLimiterReturnsFalse_WhenOverMax_TimerStartedButNotExpired()
         {
             // Arrange
-            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CUSTOMER_ID)).Returns(true);
+            Mock.Get(_timer).Setup(t => t.IsTimerStarted(CANDIDATE)).Returns(true);
 
             // Act
-            var result = Enumerable.Range(1, 11).All(_ => _rateLimiter.RateLimit(CUSTOMER_ID));
+            var result = Enumerable.Range(1, 11).All(_ => _rateLimiter.RateLimit(CANDIDATE));
 
             // Assert
             result.Should().BeFalse();
@@ -83,13 +83,13 @@ namespace Test.Controller
             // Arrange
             var timerExpirySimulationMethods = new List<CallBack>{(_)=>ResetMockTimer()};
 
-            Mock.Get(_timer).Setup(t => t.StartTimer(CUSTOMER_ID, It.IsAny<int>(), It.IsAny<CallBack>()))
-                                        .Callback<int, int, CallBack>((id, t, cb) => timerExpirySimulationMethods.Add(cb));
+            Mock.Get(_timer).Setup(t => t.StartTimer(CANDIDATE, It.IsAny<int>(), It.IsAny<CallBack>()))
+                                        .Callback<string, int, CallBack>((_, timeMs, cb) => timerExpirySimulationMethods.Add(cb));
 
             // Act
-            var result = Enumerable.Range(0, MAX_REQUESTS - 2).All(n => _rateLimiter.RateLimit(CUSTOMER_ID));
-            timerExpirySimulationMethods.ForEach((cb) => cb(CUSTOMER_ID));
-            result &= Enumerable.Range(0, MAX_REQUESTS - 2).All(n => _rateLimiter.RateLimit(CUSTOMER_ID));
+            var result = Enumerable.Range(0, MAX_REQUESTS - 2).All(n => _rateLimiter.RateLimit(CANDIDATE));
+            timerExpirySimulationMethods.ForEach((cb) => cb(CANDIDATE));
+            result &= Enumerable.Range(0, MAX_REQUESTS - 2).All(n => _rateLimiter.RateLimit(CANDIDATE));
 
             // Assert
             result.Should().BeTrue();
