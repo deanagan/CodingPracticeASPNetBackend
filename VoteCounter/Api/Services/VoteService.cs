@@ -5,14 +5,16 @@ namespace Api.Services
     public class VoteService : IVoteService
     {
         private IVoteRepository _voteRepository;
-        public VoteService(IVoteRepository voteRepository)
+        private IVoteCounter _voteCounter;
+        public VoteService(IVoteRepository voteRepository, IVoteCounter voteCounter)
         {
             _voteRepository = voteRepository;
+            _voteCounter = voteCounter;
         }
 
         public string GetWinner()
         {
-            return string.Empty;
+            return _voteCounter.FindWinner(_voteRepository.VotesCounted);
         }
 
         public void AddVoteFor(string name)
