@@ -4,6 +4,6 @@ namespace Api.Interfaces
 {
     public interface IRateLimiter
     {
-        bool RateLimit(int customerId);
+        bool RateLimit(string candidate);
     }
 }
