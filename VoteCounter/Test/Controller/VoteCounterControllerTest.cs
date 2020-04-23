@@ -15,7 +15,7 @@ namespace Test.Controller
 {
     public class VoteCounterControllerTest
     {
-
+        private readonly ILogger<VoteCounterControllerTest> _logger;
         public VoteCounterControllerTest(ITestOutputHelper testOutputHelper)
         {
             var loggerFactory = new LoggerFactory();
