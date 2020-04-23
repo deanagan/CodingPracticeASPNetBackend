@@ -20,7 +20,7 @@ namespace Test.Controller
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddProvider(new XunitLoggerProvider(testOutputHelper));
-            _logger = loggerFactory.CreateLogger<ProductController>();
+            _logger = loggerFactory.CreateLogger<VoteCounterControllerTest>();
         }
         [Fact]
         public void VoteWinnerShouldBeReturned_WhenRequested()
